@@ -47,26 +47,42 @@ I printed both elements with PETG filament on a 3D printer, and this is the resu
 
 ## Box outdoor and MCU:
 Airtight outdoor enclosure with grid for anchoring the PCB, battery and other electronic components.
+
 ![Outdoor Box](images/Caja-MCU.jpg)
+
 ## BME280 Sensor:
 The BME280 sensor from Bosch is a tiny device for soldering onto the PCB and records the internal temperature of the case where the MCU is located, as well as humidity and atmospheric pressure.
+
+![BME280](images/BME280.jpg)
 
 ## DS18B20 Sensor:
 The DS18B20 is an outdoor temperature sensor; its metal sheath is protected against moisture and dust, and it can measure ambient temperature.
 
+![DS18B20](images/DS18B20.jpg)
+
 ## Rain Gauge:
 Rain gauge seen from the outside, you can see the upper area (funnel) where there is a hole that allows water to enter and lead to the tipping bucket.
 
+![Pluviometer](images/Pluviometro.jpg)
+
 Interior rain gauge: the tipping bucket where the water falls can be seen, and in the front section, the Hall sensor that detects each revolution of the bucket. The neodymium magnet can be seen on the top of the tilting tank (a small metal piece). Using a mathematical formula, the amount of rainfall and intensity can be calculated for each revolution of the bucket, depending on the number of revolutions per minute.
+
+![Pluviometer](images/Pluviometro-Interior.jpg)
 
 ## Anemometer:
 This device measures wind speed using a Hall effect sensor connected to its shaft and a neodymium magnet embedded in the rotating housing. Each pulse from the Hall sensor corresponds to one rotation of the device, and wind speed can be calculated using a mathematical formula.
 
+![Anenometer](images/Anemometro.jpg)
+
 ## Weathervane:
 Using an AS5600 sensor and a diametrically magnetized magnet. The AS5600 sensor remains fixed on a shaft; a dome containing the magnet at its base, approximately 2-3 mm from the sensor, rotates on this shaft. As the magnet rotates, the sensor can calculate its exact position in degrees and determine the wind direction.
 
+![Weathervane](images/Veleta.jpg)
+
 ## Solar panel:
 Allows the lithium battery to be recharged during daylight hours, and in this way the battery can power the MCU and sensors for many years.
+
+![Solar Panel](images/PlacaSolar.jpg)
 
 # OnShape Desing:
 

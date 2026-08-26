@@ -1,0 +1,159 @@
+esphome:
+  name: weather-station
+  friendly_name: Weather Station
+
+esp32:
+  variant: esp32c6
+  framework:
+    type: esp-idf
+
+api:
+  encryption:
+    key: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+logger:
+
+ota:
+  - platform: esphome
+    password: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+debug:
+  update_interval: 5s
+
+network:
+  enable_ipv6: true
+ 
+openthread:
+  tlv: !secret thread_tlv
+
+output:
+ - platform: gpio
+   pin: GPIO2
+   id: Led_Control
+ 
+light:
+  - platform: binary
+    name: "LED de Control"
+    output: Led_Control
+    restore_mode: ALWAYS_ON
+i2c:
+  - scl: 7
+    sda: 6
+    id: i2c1
+
+globals:
+  - id: lluvia_total_mm
+    type: float
+    restore_value: true
+    initial_value: '0.0'
+  - id: pulsos_intervalo
+    type: int
+    restore_value: false
+    initial_value: '0'
+
+binary_sensor:
+  - platform: gpio
+    id: Lluvia_total
+    pin:
+      number: GPIO1
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    internal: true
+    filters:
+      - delayed_on_off: 10ms
+    on_press:
+      then:
+        - lambda: |-
+            id(lluvia_total_mm) += 0.138;
+            id(pulsos_intervalo) += 1;
+
+sensor:
+  - platform: bme280_i2c
+    i2c_id: i2c1
+    humidity:
+      id: sensor_bme280_humidity
+      name: Humedad
+    pressure:
+      id: sensor_bme280_pressure
+      name: Presión Atmosférica
+    temperature:
+      id: sensor_bme280_temperature
+      name: Temperatura interior
+    id: sensor_bme280
+    update_interval: 300s
+    address: 0x76
+  - platform: dallas_temp
+    name: Temperatura auxiliar
+    one_wire_id: one_wire1
+    id: sensor_dallas_temp
+    update_interval: 300s
+  - platform: adc
+    name: BatteryMonitor
+    pin: GPIO0
+    id: sensor_adc
+    attenuation: 12db
+    filters:
+      - multiply: 1.3307
+      - sliding_window_moving_average:
+          send_every: 10
+          window_size: 10
+    update_interval: 300s
+  - platform: template
+    name: "Lluvia Total Diaria"
+    id: lluvia_total_diaria
+    unit_of_measurement: "mm"
+    accuracy_decimals: 2
+    icon: "mdi:weather-rainy"
+    lambda: return id(lluvia_total_mm);
+    update_interval: 300s
+  - platform: template
+    name: "Intensidad de Lluvia"
+    id: intensidad_lluvia
+    unit_of_measurement: "mm/min"
+    accuracy_decimals: 3
+    icon: "mdi:weather-pouring"
+    lambda: |-
+      float tasa = id(pulsos_intervalo) * 0.138;
+      id(pulsos_intervalo) = 0;
+      return tasa;
+    update_interval: 300s
+  - platform: pulse_counter
+    pin:
+      number: GPIO5
+      mode:
+        input: true
+        pullup: true
+    unit_of_measurement: "km/h"
+    name: "Velocidad del Viento"
+    id: velocidad_viento
+    update_interval: 60s
+    filters:
+      - multiply: 0.1119
+    accuracy_decimals: 1
+
+time:
+  - platform: sntp
+    id: reloj_esp
+    on_time:
+      - seconds: 0
+        minutes: 0
+        hours: 0
+        then:
+          - lambda: 'id(lluvia_total_mm) = 0.0;'
+
+one_wire:
+  - platform: gpio
+    pin: GPIO23
+    id: one_wire1
+
+text_sensor:
+  - platform: openthread_info
+    role:
+      name: "Device Role"
+    rloc16:
+      name: "RLOC16"
+  - platform: debug
+    reset_reason:
+      name: "Reset Reason"

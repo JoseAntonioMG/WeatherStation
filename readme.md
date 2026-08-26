@@ -18,10 +18,10 @@ I want to fabricate a PCB from the design I created in EasyEDA, which is shown i
 
 1. An ESP32C6 microprocessor from espressif.
 2. A lithium battery power system consisting of:
-a) A 3.7V single-cell lithium battery 18650
-b) A solar panel
-c) A lithium battery protection and charging circuit with the components TP4056, DW0A1, and FS8205A
-d) A voltage regulator with the TPS63802 circuit
+  - 3.7V single-cell lithium battery 18650
+  - solar panel
+  - Lithium battery protection and charging circuit with the components TP4056, DW0A1, and FS8205A
+  - Voltage regulator with the TPS63802 circuit
 3. A BME280 sensor for measuring temperature, humidity, and atmospheric pressure
 4. A DS18B20 sensor for measuring external temperature via a probe
 5. A battery monitor with readings on an ESP32C6 GPIO ADC and a voltage divider.

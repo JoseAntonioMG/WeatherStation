@@ -89,32 +89,44 @@ Allows the lithium battery to be recharged during daylight hours, and in this wa
 The rain gauge, anemometer and the weathervane were designed using the OnShape platform, and once designed they were printed on a 3D printer with PETG material.
 
 General Rain Gauge Design:
-
 https://cad.onshape.com/documents/2dcf995cedd97f664920bde0/w/8a44d4fc85dcee91b81b1610/e/77a74460ef746bb4184f5de4?renderMode=0&uiState=6a722d3f2eacb7533533a05f
+
+![Rain Gauge](images/OnShape-Pluviometro-exterior.jpg)
 
 Design of the interior rain gauge (tilting beam):
 
+![Rain Gauge interior](images/OnShape-Pluviometro-interior.jpg)
+
 Rain gauge cross-section design:
 
-Anemometer design overview:
+![Rain Gauge cross-section](images/OnShape-Pluviometro-Trasversal.jpg)
 
+Anemometer design overview:
 https://cad.onshape.com/documents/6742c427159a326d2286ed9b/w/4320dd89b1448b79ad4a9c8e/e/1e7c80b05608dad78a0cc4f2?renderMode=0&uiState=6a722d159fd45157bc112ff3
+
+![Anemometer](images/OnShape-Anemometro-exterior.jpg)
 
 Cross-section design of the anemometer:
 
+![Anemometer cross-section](images/OnShape-Anemometro-Trasversal.jpg)
+
 The 3144E is a magnetic hall effect sensor; when a magnet passes near the sensor, it emits an electrical pulse that is recorded in the MCU. Each pulse corresponds to one complete revolution of the anemometer, and therefore, the wind speed can be determined by calculating the number of revolutions the device has made in a given time.
+
+![3144E Sensor](images/3144E.jpg)
 
 Weathervane design:
 https://cad.onshape.com/documents/b86387da9242ebc0d594fa96/w/6a7b8755a9ff353098229fa7/e/60776af953bbda5c55d1507b
 
+![Weathervane](images/OnShape-Veleta-exterior.jpg)
 
 Cross-section design of the weathervane:
+
+![Wathervane cross-section](images/OnShape-Veleta-Trasversal.jpg)
 
 The yellow part that holds the AS5600 board is visible, and the green part above it is the AS5600 sensor.
 The dome (red) and the outer cylinder (brown) rotate around the axis (gray) via the bearings (blue).
 The round magnet is located at the base of the dome (red), 2 mm from the sensor (green).
 
-
-
 AS5600 sensor: for the weathervane is a magnetic position sensor.
 
+![AS5600 sensor](images/AS5600.jpg)

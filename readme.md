@@ -43,7 +43,7 @@ I designed the different elements for measuring rain and wind on the OnShape pla
 
 I printed both elements with PETG filament on a 3D printer, and this is the result:
 
-# Gallery
+# Image gallery
 
 ## Box outdoor and MCU:
 Airtight outdoor enclosure with grid for anchoring the PCB, battery and other electronic components.

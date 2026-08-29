@@ -41,6 +41,16 @@ i2c:
     sda: 6
     id: i2c1
 
+one_wire:
+  - platform: gpio
+    pin: GPIO23
+    id: one_wire1
+
+as5600:
+  id: my_as5600
+  i2c_id: i2c1
+  address: 0x36
+
 globals:
   - id: lluvia_total_mm
     type: float
@@ -50,12 +60,24 @@ globals:
     type: int
     restore_value: false
     initial_value: '0'
+  - id: suma_sin
+    type: float
+    restore_value: false
+    initial_value: '0.0'
+  - id: suma_cos
+    type: float
+    restore_value: false
+    initial_value: '0.0'
+  - id: contador_muestras_viento
+    type: int
+    restore_value: false
+    initial_value: '0'
 
 binary_sensor:
   - platform: gpio
     id: Lluvia_total
     pin:
-      number: GPIO1
+      number: GPIO16
       mode:
         input: true
         pullup: true
@@ -85,12 +107,12 @@ sensor:
     update_interval: 300s
     address: 0x76
   - platform: dallas_temp
-    name: Temperatura auxiliar
+    name: "Temperatura auxiliar"
     one_wire_id: one_wire1
     id: sensor_dallas_temp
     update_interval: 300s
   - platform: adc
-    name: BatteryMonitor
+    name: "Battery Monitor"
     pin: GPIO0
     id: sensor_adc
     attenuation: 12db
@@ -120,18 +142,60 @@ sensor:
       return tasa;
     update_interval: 300s
   - platform: pulse_counter
+    name: "Velocidad del Viento"
     pin:
-      number: GPIO5
+      number: GPIO11
       mode:
         input: true
         pullup: true
     unit_of_measurement: "km/h"
-    name: "Velocidad del Viento"
     id: velocidad_viento
     update_interval: 60s
     filters:
       - multiply: 0.1119
     accuracy_decimals: 1
+  - platform: as5600
+    name: "Direccion Viento Angulo"
+    as5600_id: my_as5600
+    update_interval: 2s
+    id: direccion_viento_angulo
+    unit_of_measurement: "°"
+    accuracy_decimals: 1
+    icon: "mdi:compass-outline"
+    out_of_range_mode: nan
+    internal: true
+    filters:
+      - lambda: 'return x * as5600::RAW_TO_DEGREES;'
+  - platform: template
+    name: "Direccion Viento Promedio"
+    id: direccion_viento_promedio
+    unit_of_measurement: "°"
+    accuracy_decimals: 0
+    icon: "mdi:compass"
+    update_interval: 60s
+    internal: true
+    lambda: |-
+      if (id(contador_muestras_viento) == 0) return {};
+      float promedio_rad = atan2(id(suma_sin), id(suma_cos));
+      float grados = promedio_rad * 180.0 / 3.14159265;
+      if (grados < 0) grados += 360.0;
+      id(suma_sin) = 0.0;
+      id(suma_cos) = 0.0;
+      id(contador_muestras_viento) = 0;
+      return grados;
+
+interval:
+  - interval: 2s
+    then:
+      - lambda: |-
+          float grados = id(direccion_viento_angulo).state;
+          if (!std::isnan(grados))
+          {
+            float rad = grados * 3.14159265 / 180.0;
+            id(suma_sin) += sin(rad);
+            id(suma_cos) += cos(rad);
+            id(contador_muestras_viento) += 1;
+          }
 
 time:
   - platform: sntp
@@ -143,11 +207,6 @@ time:
         then:
           - lambda: 'id(lluvia_total_mm) = 0.0;'
 
-one_wire:
-  - platform: gpio
-    pin: GPIO23
-    id: one_wire1
-
 text_sensor:
   - platform: openthread_info
     role:
@@ -157,3 +216,14 @@ text_sensor:
   - platform: debug
     reset_reason:
       name: "Reset Reason"
+  - platform: template
+    name: "Direccion Viento Cardinal"
+    id: direccion_viento_texto
+    icon: "mdi:compass"
+    update_interval: 60s
+    lambda: |-
+      float grados = id(direccion_viento_promedio).state;
+      if (std::isnan(grados)) return {};
+      const char* direcciones[] = {"Norte", "Noreste", "Este", "Sureste", "Sur", "Suroeste", "Oeste", "Noroeste"};
+      int indice = (int)((grados + 22.5) / 45.0) % 8;
+      return std::string(direcciones[indice]);

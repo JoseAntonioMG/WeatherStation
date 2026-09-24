@@ -45,10 +45,15 @@ I printed both elements with PETG filament on a 3D printer, and this is the resu
 
 # Image gallery
 
-## Box outdoor and MCU:
+## PCB:
+This a PCB build from LCDPCB
+
+![PCB](images/MotherBoard.jpg)
+
+## Box outdoor and:
 Airtight outdoor enclosure with grid for anchoring the PCB, battery and other electronic components.
 
-![Outdoor Box](images/MotherBoard.jpg)
+![Outdoor Box](images/Box-MCU.jpg)
 
 ## BME280 Sensor:
 The BME280 sensor from Bosch is a tiny device for soldering onto the PCB and records the internal temperature of the case where the MCU is located, as well as humidity and atmospheric pressure.
